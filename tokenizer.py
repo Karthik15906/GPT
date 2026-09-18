@@ -47,28 +47,52 @@ def decode(ids,merges):
     return b"".join(byte_chunks).decode('utf-8',errors='replace')
 
 
-with open('bpe_corpus.txt','r',encoding='utf-8') as f:
-    text = f.read()
-    # text=text[:100_000]
-tokens= list(text.encode('utf-8'))
-merges = {}
-for _ in range(1000): # 10 just for practice
-    pair_counts = get_pair_counts(tokens)
-    if not pair_counts:
-        break
-    best_pair = max(pair_counts, key=pair_counts.get)
-    new_token = 256 + _
-    merges[best_pair] = new_token
-    tokens = merge(tokens,best_pair,new_token)
-    print("Merged:", best_pair, "→", new_token)
 
-print('\nLearned merges: ')
-print(merges)    
 
-encoded = encode(input(), merges)
+# import json
+# with open('merges.json','r') as f:
+#     data = json.load(f)
 
-print("Encoded:", encoded)
+# merges={}
+# for pair,new_token in data.items():
+#     a,b = map(int,pair.split(','))
+#     merges[(a,b)]= new_token
 
-decoded = decode(encoded, merges)
+# vocab_size = 256 + len(merges)
+# print('vocab_size:',vocab_size)
 
-print("Decoded:", decoded)
+# test_text = input()
+
+# encoded = encode(test_text, merges)
+# decoded = decode(encoded, merges)
+
+# print("Original:", test_text)
+# print("Encoded:", encoded)
+# print("Decoded:", decoded)
+# print("Match:", test_text == decoded)
+
+# with open('bpe_corpus.txt','r',encoding='utf-8') as f:
+#     text = f.read()
+#     # text=text[:100_000]
+# tokens= list(text.encode('utf-8'))
+# merges = {}
+# for _ in range(1000): # 10 just for practice
+#     pair_counts = get_pair_counts(tokens)
+#     if not pair_counts:
+#         break
+#     best_pair = max(pair_counts, key=pair_counts.get)
+#     new_token = 256 + _
+#     merges[best_pair] = new_token
+#     tokens = merge(tokens,best_pair,new_token)
+#     print("Merged:", best_pair, "→", new_token)
+
+# print('\nLearned merges: ')
+# print(merges)    
+
+# encoded = encode(input(), merges)
+
+# print("Encoded:", encoded)
+
+# decoded = decode(encoded, merges)
+
+# print("Decoded:", decoded)
