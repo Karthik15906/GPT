@@ -4,7 +4,7 @@ import json
 
 
 class Embedding:
-
+    '''vectors of Higher dimensions'''
     def __init__(self,vocab_size,d_model):
         self.weight = np.random.randn(vocab_size,d_model)*0.02
 
@@ -13,10 +13,11 @@ class Embedding:
 
 
 embedding = Embedding(vocab_size=1256,d_model=256)
-print(embedding.weight.shape)
-
 
 class Positional_encoding():
+    '''
+    positions for embedding
+    '''
     def __init__(self,context_length,d_model) -> None:
         self.context_length = context_length
         self.d_model = d_model
