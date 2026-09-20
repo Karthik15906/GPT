@@ -96,31 +96,31 @@ class MultiHeadAttention:
 
 
 
-text = input('enter input:')
-with open('merges.json','r') as f:
-    data = json.load(f)
+# text = input('enter input:')
+# with open('merges.json','r') as f:
+#     data = json.load(f)
 
-merges={}
-for pair,new_token in data.items():
-    a,b = map(int,pair.split(','))
-    merges[(a,b)]= new_token
+# merges={}
+# for pair,new_token in data.items():
+#     a,b = map(int,pair.split(','))
+#     merges[(a,b)]= new_token
 
-token_ids = encode(text,merges)
-x = embedding.forward(token_ids)
-print("embedding matrix:\n",x)
-print('shape:',x.shape)
+# token_ids = encode(text,merges)
+# x = embedding.forward(token_ids)
+# print("embedding matrix:\n",x)
+# print('shape:',x.shape)
 
-pe = Positional_encoding(len(token_ids),256)
-pos_encoding = pe.sinusoidal_positional_encoding()
-x = x + pos_encoding
+# pe = Positional_encoding(len(token_ids),256)
+# pos_encoding = pe.sinusoidal_positional_encoding()
+# x = x + pos_encoding
 
-print("embedding + positional matrix:\n",x)
-print('shape:',x.shape)
+# print("embedding + positional matrix:\n",x)
+# print('shape:',x.shape)
 
 
-atten = MultiHeadAttention()
-y,weights = atten.forward(x)
-print('muti attention matrix:\n',y)
-print('shape:',y.shape)
-print("multi Attention weights:")
-print(weights)
+# atten = MultiHeadAttention()
+# y,weights = atten.forward(x)
+# print('muti attention matrix:\n',y)
+# print('shape:',y.shape)
+# print("multi Attention weights:")
+# print(weights)
