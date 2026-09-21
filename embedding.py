@@ -12,7 +12,7 @@ class Embedding:
         return self.weight[token_id]
 
 
-embedding = Embedding(vocab_size=1256,d_model=256)
+embedding = Embedding(vocab_size=756,d_model=256)
 
 class Positional_encoding():
     '''

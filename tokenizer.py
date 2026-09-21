@@ -1,4 +1,4 @@
-
+import json
 def get_pair_counts(tokens):
     '''
     Counts the occurrences of every consecutive pair of integers.
@@ -47,6 +47,68 @@ def decode(ids,merges):
     return b"".join(byte_chunks).decode('utf-8',errors='replace')
 
 
+# with open("bpe_corpus.txt", "r", encoding="utf-8") as f:
+#     text = f.read()
+
+# print("Corpus characters:", len(text))
+
+
+
+
+# tokens = list(text.encode("utf-8"))
+
+# print("Initial number of tokens:", len(tokens))
+
+
+# num_merges = 500
+
+# merges = {}
+
+# for i in range(num_merges):
+
+#     pair_counts = get_pair_counts(tokens)
+
+#     if not pair_counts:
+#         break
+
+#     best_pair = max(pair_counts,key=pair_counts.get)
+
+#     new_token = 256 + i
+
+#     merges[best_pair] = new_token
+
+#     tokens = merge(
+#         tokens,
+#         best_pair,
+#         new_token
+#     )
+
+#     print(
+#         f"Merge {i + 1}/{num_merges}: "
+#         f"{best_pair} → {new_token} "
+#         f"(count={pair_counts[best_pair]})"
+#     )
+
+
+
+# vocab_size = 256 + len(merges)
+
+# print("\nTraining complete")
+# print("Number of merges:", len(merges))
+# print("Vocabulary size:", vocab_size)
+
+
+# with open("merges.json", "w") as f:
+
+#     json.dump(
+#         {
+#             f"{a},{b}": new_token
+#             for (a, b), new_token in merges.items()
+#         },
+#         f
+#     )
+
+# print("Saved merges.json")
 
 
 # import json
@@ -58,6 +120,8 @@ def decode(ids,merges):
 #     a,b = map(int,pair.split(','))
 #     merges[(a,b)]= new_token
 
+# print("Token 835:")
+# print(decode([835], merges))
 # vocab_size = 256 + len(merges)
 # print('vocab_size:',vocab_size)
 

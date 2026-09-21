@@ -5,6 +5,7 @@ from embedding import embedding,Positional_encoding
 from attention import MultiHeadAttention
 from normalization import LayerNorm
 import json
+
 class Add_layer:
 
     def __init__(self, inputs, neurons):
@@ -58,71 +59,71 @@ class FeedForward:
         return self.layer2.outputs
 
 
-text = input('enter input:')
-with open('merges.json','r') as f:
-    data = json.load(f)
+# text = input('enter input:')
+# with open('merges.json','r') as f:
+#     data = json.load(f)
 
-merges={}
-for pair,new_token in data.items():
-    a,b = map(int,pair.split(','))
-    merges[(a,b)]= new_token
+# merges={}
+# for pair,new_token in data.items():
+#     a,b = map(int,pair.split(','))
+#     merges[(a,b)]= new_token
 
-token_ids = encode(text,merges)
-x = embedding.forward(token_ids)
-
-
-pe = Positional_encoding(len(token_ids),256)
-pos_encoding = pe.sinusoidal_positional_encoding()
-x = x + pos_encoding
+# token_ids = encode(text,merges)
+# x = embedding.forward(token_ids)
 
 
-
-
-atten = MultiHeadAttention()
-attention_output, weights = atten.forward(x)
-print('muti attention matrix:\n',attention_output)
-print('shape:',attention_output.shape)
-print("multi Attention weights:")
-print(weights)
-
-
-x = x + attention_output
-normal1 = LayerNorm(256)
-x = normal1.forward(x)
-print("After Attention + Residual + LayerNorm:")
-print(x)
-print("Mean of each token:")
-print(np.mean(x, axis=-1))
-print("\nVariance of each token:")
-print(np.var(x, axis=-1))
-
-
-normal = LayerNorm()
-x = normal.forward(x)
-print('normalized\n:',x)
-print("Mean of each token:")
-print(np.mean(x, axis=-1))
-
-print("\nVariance of each token:")
-print(np.var(x, axis=-1))
+# pe = Positional_encoding(len(token_ids),256)
+# pos_encoding = pe.sinusoidal_positional_encoding()
+# x = x + pos_encoding
 
 
 
 
+# atten = MultiHeadAttention()
+# attention_output, weights = atten.forward(x)
+# print('muti attention matrix:\n',attention_output)
+# print('shape:',attention_output.shape)
+# print("multi Attention weights:")
+# print(weights)
 
-ffn = FeedForward(d_model=256, d_ff=1024)
-ffn_output = ffn.forward(x)
-print("Input shape:", x.shape)
-print("FFN output shape:", ffn_output.shape)
+
+# x = x + attention_output
+# normal1 = LayerNorm(256)
+# x = normal1.forward(x)
+# print("After Attention + Residual + LayerNorm:")
+# print(x)
+# print("Mean of each token:")
+# print(np.mean(x, axis=-1))
+# print("\nVariance of each token:")
+# print(np.var(x, axis=-1))
+
+
+# normal = LayerNorm()
+# x = normal.forward(x)
+# print('normalized\n:',x)
+# print("Mean of each token:")
+# print(np.mean(x, axis=-1))
+
+# print("\nVariance of each token:")
+# print(np.var(x, axis=-1))
 
 
 
-x = x + ffn_output
-normal2 = LayerNorm(256)
-x = normal2.forward(x)
-print("After FFN + Residual + LayerNorm:")
-print(x)
-print("Mean of each token:")
-print(np.mean(x, axis=-1))
-print("\nVariance of each token:")
-print(np.var(x, axis=-1))
+
+
+# ffn = FeedForward(d_model=256, d_ff=1024)
+# ffn_output = ffn.forward(x)
+# print("Input shape:", x.shape)
+# print("FFN output shape:", ffn_output.shape)
+
+
+
+# x = x + ffn_output
+# normal2 = LayerNorm(256)
+# x = normal2.forward(x)
+# print("After FFN + Residual + LayerNorm:")
+# print(x)
+# print("Mean of each token:")
+# print(np.mean(x, axis=-1))
+# print("\nVariance of each token:")
+# print(np.var(x, axis=-1))
