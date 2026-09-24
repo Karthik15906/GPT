@@ -1,5 +1,5 @@
 import numpy as np
-
+print('normalizer running..........')
 
 class LayerNorm:
 
@@ -24,3 +24,13 @@ class LayerNorm:
         self.outputs = self.gamma * self.x_hat + self.beta
 
         return self.outputs
+
+    def backward(self,dvalues):
+
+        self.dgamma = np.sum(dvalues * self.x_hat,axis=0,keepdims=True)
+        
+        self.dbeta = np.sum(dvalues,axis=0,keepdims=True)
+
+        self.dinputs = (self.gamma/np.sqrt(self.variance + self.eps)*(dvalues - np.mean(dvalues,axis=-1,keepdims=True)-self.x_hat*np.mean(dvalues * self.x_hat,axis=-1,keepdims=True)))
+
+        return self.dinputs

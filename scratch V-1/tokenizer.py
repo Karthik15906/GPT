@@ -1,4 +1,5 @@
 import json
+print('tokenizer running..........')
 def get_pair_counts(tokens):
     '''
     Counts the occurrences of every consecutive pair of integers.
@@ -11,6 +12,7 @@ def get_pair_counts(tokens):
 
 
 def merge(tokens,pair,new_token):
+
     merged=[]
     i=0
     while i < len(tokens):

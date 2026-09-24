@@ -2,7 +2,7 @@ import numpy as np
 from tokenizer import encode,decode
 import json
 
-
+print('embedding running.........')
 class Embedding:
     '''vectors of Higher dimensions'''
     def __init__(self,vocab_size,d_model):
@@ -10,6 +10,15 @@ class Embedding:
 
     def forward(self,token_id):
         return self.weight[token_id]
+
+    def backward(self, dvalues, token_ids):
+
+        self.dweights = np.zeros_like(self.weight)
+
+        for i, token_id in enumerate(token_ids):
+            self.dweights[token_id] += dvalues[i]
+
+        self.dinputs = dvalues
 
 
 embedding = Embedding(vocab_size=756,d_model=256)

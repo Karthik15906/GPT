@@ -5,7 +5,7 @@ from embedding import embedding,Positional_encoding
 from attention import MultiHeadAttention
 from normalization import LayerNorm
 import json
-
+print('feedforward running..........')
 class Add_layer:
 
     def __init__(self, inputs, neurons):
@@ -57,6 +57,14 @@ class FeedForward:
         self.layer2.forward(self.gelu.outputs)
 
         return self.layer2.outputs
+    
+    def backward(self,dvalues):
+
+        self.layer2.backward(dvalues)
+        self.gelu.backward(self.layer2.dinputs)
+        self.layer1.backward(self.gelu.dinputs)
+
+        self.dinputs = self.layer1.dinputs
 
 
 # text = input('enter input:')
