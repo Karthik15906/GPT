@@ -170,87 +170,52 @@ for epoch in range(epochs):
     total_loss = 0.0
     steps = 0
 
-    for start in range(
-        0,
-        len(token_ids) - sequence_length,
-        sequence_length
-    ):
+    for start in range(0,len(token_ids) - sequence_length,sequence_length):
 
-        # ----------------------------------------------------
         # Input / target
-        # ----------------------------------------------------
 
-        input_ids = token_ids[
-            start:start + sequence_length
-        ]
+        input_ids = token_ids[start:start + sequence_length]
 
-        target_ids = token_ids[
-            start + 1:start + sequence_length + 1
-        ]
+        target_ids = token_ids[start + 1:start + sequence_length + 1]
 
-        # ----------------------------------------------------
         # Embedding
-        # ----------------------------------------------------
 
         x = embedding.forward(input_ids)
 
-        # ----------------------------------------------------
         # Positional encoding
-        # ----------------------------------------------------
 
-        pe = Positional_encoding(
-            len(input_ids),
-            256
-        )
+        pe = Positional_encoding(len(input_ids),256)
 
         x = x + pe.sinusoidal_positional_encoding()
 
-        # ----------------------------------------------------
         # Transformer
-        # ----------------------------------------------------
 
         output, attention_weights = transformer.forward(x)
 
-        # ----------------------------------------------------
         # Language model head
-        # ----------------------------------------------------
 
         logits = lm_head.forward(output)
 
-        # ----------------------------------------------------
         # Softmax
-        # ----------------------------------------------------
 
         probabilities = softmax.forward(logits)
 
-        # ----------------------------------------------------
         # Cross entropy loss
-        # ----------------------------------------------------
 
         N = len(target_ids)
 
-        correct_probabilities = probabilities[
-            np.arange(N),
-            target_ids
-        ]
+        correct_probabilities = probabilities[np.arange(N),target_ids]
 
-        loss = -np.mean(
-            np.log(correct_probabilities + 1e-9)
-        )
+        loss = -np.mean(np.log(correct_probabilities + 1e-9))
 
         total_loss += loss
         steps += 1
 
-        # ----------------------------------------------------
         # Backward
-        # ----------------------------------------------------
 
         dlogits = probabilities.copy()
 
-        dlogits[
-            np.arange(N),
-            target_ids
-        ] -= 1
+        dlogits[np.arange(N),target_ids] -= 1
 
         dlogits /= N
 
@@ -258,120 +223,59 @@ for epoch in range(epochs):
         lm_head.backward(dlogits)
 
         # Transformer
-        transformer.backward(
-            lm_head.dinputs
-        )
+        transformer.backward(lm_head.dinputs)
 
         # Embedding
-        embedding.backward(
-            transformer.dinputs,
-            input_ids
-        )
+        embedding.backward(transformer.dinputs,input_ids)
 
-        # ----------------------------------------------------
         # Update embedding
-        # ----------------------------------------------------
 
-        embedding.weight -= (
-            learning_rate *
-            embedding.dweights
-        )
+        embedding.weight -= (learning_rate *embedding.dweights)
 
-        # ----------------------------------------------------
         # Update Transformer
-        # ----------------------------------------------------
 
         for block in transformer.blocks:
 
             # Attention
-            block.attention.w_q -= (
-                learning_rate *
-                block.attention.dw_q
-            )
+            block.attention.w_q -= (learning_rate *block.attention.dw_q)
 
-            block.attention.w_k -= (
-                learning_rate *
-                block.attention.dw_k
-            )
+            block.attention.w_k -= (learning_rate *block.attention.dw_k)
 
-            block.attention.w_v -= (
-                learning_rate *
-                block.attention.dw_v
-            )
+            block.attention.w_v -= (learning_rate *block.attention.dw_v)
 
-            block.attention.w_o -= (
-                learning_rate *
-                block.attention.dw_o
-            )
+            block.attention.w_o -= (learning_rate *block.attention.dw_o)
 
             # LayerNorm 1
-            block.normalization1.gamma -= (
-                learning_rate *
-                block.normalization1.dgamma
-            )
+            block.normalization1.gamma -= (learning_rate *block.normalization1.dgamma)
 
-            block.normalization1.beta -= (
-                learning_rate *
-                block.normalization1.dbeta
-            )
+            block.normalization1.beta -= (learning_rate *block.normalization1.dbeta)
 
             # FFN layer 1
-            block.ffn.layer1.weights -= (
-                learning_rate *
-                block.ffn.layer1.dweights
-            )
+            block.ffn.layer1.weights -= (learning_rate *block.ffn.layer1.dweights)
 
-            block.ffn.layer1.bias -= (
-                learning_rate *
-                block.ffn.layer1.dbias
-            )
+            block.ffn.layer1.bias -= (learning_rate *block.ffn.layer1.dbias)
 
             # FFN layer 2
-            block.ffn.layer2.weights -= (
-                learning_rate *
-                block.ffn.layer2.dweights
-            )
+            block.ffn.layer2.weights -= (learning_rate *block.ffn.layer2.dweights)
 
-            block.ffn.layer2.bias -= (
-                learning_rate *
-                block.ffn.layer2.dbias
-            )
+            block.ffn.layer2.bias -= (learning_rate *block.ffn.layer2.dbias)
 
             # LayerNorm 2
-            block.normalization2.gamma -= (
-                learning_rate *
-                block.normalization2.dgamma
-            )
+            block.normalization2.gamma -= (learning_rate *block.normalization2.dgamma)
 
-            block.normalization2.beta -= (
-                learning_rate *
-                block.normalization2.dbeta
-            )
+            block.normalization2.beta -= (learning_rate *block.normalization2.dbeta)
 
-        # ----------------------------------------------------
         # Update Language Model Head
-        # ----------------------------------------------------
 
-        lm_head.output_layer.weights -= (
-            learning_rate *
-            lm_head.output_layer.dweights
-        )
+        lm_head.output_layer.weights -= (learning_rate *lm_head.output_layer.dweights)
 
-        lm_head.output_layer.bias -= (
-            learning_rate *
-            lm_head.output_layer.dbias
-        )
+        lm_head.output_layer.bias -= (learning_rate *lm_head.output_layer.dbias)
 
-    # --------------------------------------------------------
     # Epoch loss
-    # --------------------------------------------------------
 
     average_loss = total_loss / steps
 
-    print(
-        f"Epoch {epoch + 1}/{epochs} "
-        f"| Loss: {average_loss:.6f}"
-    )
+    print(f"Epoch {epoch + 1}/{epochs} "f"| Loss: {average_loss:.6f}")
 
 
 # ============================================================
